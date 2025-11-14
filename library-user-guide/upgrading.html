@@ -403,10 +403,48 @@
 -->
 <section id="upgrade-guides">
 <h1>Upgrade Guides<a class="headerlink" href="#upgrade-guides" title="Link to this heading">#</a></h1>
+<section id="datafusion-52-0-0">
+<h2>DataFusion <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code><a class="headerlink" href="#datafusion-52-0-0" title="Link to this heading">#</a></h2>
+<p><strong>Note:</strong> DataFusion <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code> has not been released yet. The information provided in this section pertains to features and changes that have already been merged to the main branch and are awaiting release in this version.</p>
+<p>You can see the current <a class="reference external" href="https://github.com/apache/datafusion/issues/18566">status of the <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code> release here</a></p>
+<section id="planner-now-requires-explicit-opt-in-for-within-group-syntax">
+<h3>Planner now requires explicit opt-in for WITHIN GROUP syntax<a class="headerlink" href="#planner-now-requires-explicit-opt-in-for-within-group-syntax" title="Link to this heading">#</a></h3>
+<p>The SQL planner now enforces the aggregate UDF contract more strictly: the
+<code class="docutils literal notranslate"><span class="pre">WITHIN</span> <span class="pre">GROUP</span> <span class="pre">(ORDER</span> <span class="pre">BY</span> <span class="pre">...)</span></code> syntax is accepted only if the aggregate UDAF
+explicitly advertises support by returning <code class="docutils literal notranslate"><span class="pre">true</span></code> from
+<code class="docutils literal notranslate"><span class="pre">AggregateUDFImpl::supports_within_group_clause()</span></code>.</p>
+<p>Previously the planner forwarded a <code class="docutils literal notranslate"><span class="pre">WITHIN</span> <span class="pre">GROUP</span></code> clause to order-sensitive
+aggregates even when they did not implement ordered-set semantics, which could
+cause queries such as <code class="docutils literal notranslate"><span class="pre">SUM(x)</span> <span class="pre">WITHIN</span> <span class="pre">GROUP</span> <span class="pre">(ORDER</span> <span class="pre">BY</span> <span class="pre">x)</span></code> to plan successfully.
+This behavior was too permissive and has been changed to match PostgreSQL and
+the documented semantics.</p>
+<p>Migration: If your UDAF intentionally implements ordered-set semantics and
+wants to accept the <code class="docutils literal notranslate"><span class="pre">WITHIN</span> <span class="pre">GROUP</span></code> SQL syntax, update your implementation to
+return <code class="docutils literal notranslate"><span class="pre">true</span></code> from <code class="docutils literal notranslate"><span class="pre">supports_within_group_clause()</span></code> and handle the ordering
+semantics in your accumulator implementation. If your UDAF is merely
+order-sensitive (but not an ordered-set aggregate), do not advertise
+<code class="docutils literal notranslate"><span class="pre">supports_within_group_clause()</span></code> and clients should use alternative function
+signatures (for example, explicit ordering as a function argument) instead.</p>
+</section>
+<section id="aggregateudfimpl-supports-null-handling-clause-now-defaults-to-false">
+<h3><code class="docutils literal notranslate"><span class="pre">AggregateUDFImpl::supports_null_handling_clause</span></code> now defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code><a class="headerlink" href="#aggregateudfimpl-supports-null-handling-clause-now-defaults-to-false" title="Link to this heading">#</a></h3>
+<p>This method specifies whether an aggregate function allows <code class="docutils literal notranslate"><span class="pre">IGNORE</span> <span class="pre">NULLS</span></code>/<code class="docutils literal notranslate"><span class="pre">RESPECT</span> <span class="pre">NULLS</span></code>
+during SQL parsing, with the implication it respects these configs during computation.</p>
+<p>Most DataFusion aggregate functions silently ignored this syntax in prior versions
+as they did not make use of it and it was permitted by default. We change this so
+only the few functions which do respect this clause (e.g. <code class="docutils literal notranslate"><span class="pre">array_agg</span></code>, <code class="docutils literal notranslate"><span class="pre">first_value</span></code>,
+<code class="docutils literal notranslate"><span class="pre">last_value</span></code>) need to implement it.</p>
+<p>Custom user defined aggregate functions will also error if this syntax is used,
+unless they explicitly declare support by overriding the method.</p>
+<p>For example, SQL parsing will now fail for queries such as this:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">median</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span><span class="w"> </span><span class="k">IGNORE</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">table</span>
+</pre></div>
+</div>
+<p>Instead of silently succeeding.</p>
+</section>
+</section>
 <section id="datafusion-51-0-0">
 <h2>DataFusion <code class="docutils literal notranslate"><span class="pre">51.0.0</span></code><a class="headerlink" href="#datafusion-51-0-0" title="Link to this heading">#</a></h2>
-<p><strong>Note:</strong> DataFusion <code class="docutils literal notranslate"><span class="pre">51.0.0</span></code> has not been released yet. The information provided in this section pertains to features and changes that have already been merged to the main branch and are awaiting release in this version.</p>
-<p>You can see the current <a class="reference external" href="https://github.com/apache/datafusion/issues/17558">status of the <code class="docutils literal notranslate"><span class="pre">51.0.0</span></code>release here</a></p>
 <section id="arrow-parquet-updated-to-57-0-0">
 <h3><code class="docutils literal notranslate"><span class="pre">arrow</span></code> / <code class="docutils literal notranslate"><span class="pre">parquet</span></code> updated to 57.0.0<a class="headerlink" href="#arrow-parquet-updated-to-57-0-0" title="Link to this heading">#</a></h3>
 </section>
@@ -507,7 +545,7 @@ Users may need to update their paths to account for these changes.</p>
 </div>
 <p><strong>Impact on builders:</strong></p>
 <p>The <code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder::with_projection()</span></code> method has been deprecated in favor of <code class="docutils literal notranslate"><span class="pre">with_projection_indices()</span></code>:</p>
-<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>let config = FileScanConfigBuilder::new(url, schema, file_source)
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>let config = FileScanConfigBuilder::new(url, file_source)
 <span class="gd">-   .with_projection(Some(vec![0, 2, 3]))</span>
 <span class="gi">+   .with_projection_indices(Some(vec![0, 2, 3]))</span>
 <span class="w"> </span>   .build();
@@ -540,6 +578,84 @@ to the previous value you can execute the sql:</p>
 </div>
 <p>This change was made to better support using the default timezone in scalar UDF functions such as
 <code class="docutils literal notranslate"><span class="pre">now</span></code>, <code class="docutils literal notranslate"><span class="pre">current_date</span></code>, <code class="docutils literal notranslate"><span class="pre">current_time</span></code>, and <code class="docutils literal notranslate"><span class="pre">to_timestamp</span></code> among others.</p>
+</section>
+<section id="refactoring-of-filesource-constructors-and-filescanconfigbuilder-to-accept-schemas-upfront">
+<h3>Refactoring of <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> constructors and <code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder</span></code> to accept schemas upfront<a class="headerlink" href="#refactoring-of-filesource-constructors-and-filescanconfigbuilder-to-accept-schemas-upfront" title="Link to this heading">#</a></h3>
+<p>The way schemas are passed to file sources and scan configurations has been significantly refactored. File sources now require the schema (including partition columns) to be provided at construction time, and <code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder</span></code> no longer takes a separate schema parameter.</p>
+<p><strong>Who is affected:</strong></p>
+<ul class="simple">
+<li><p>Users who create <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code> or file sources (<code class="docutils literal notranslate"><span class="pre">ParquetSource</span></code>, <code class="docutils literal notranslate"><span class="pre">CsvSource</span></code>, <code class="docutils literal notranslate"><span class="pre">JsonSource</span></code>, <code class="docutils literal notranslate"><span class="pre">AvroSource</span></code>) directly</p></li>
+<li><p>Users who implement custom <code class="docutils literal notranslate"><span class="pre">FileFormat</span></code> implementations</p></li>
+</ul>
+<p><strong>Key changes:</strong></p>
+<ol class="arabic">
+<li><p><strong>FileSource constructors now require TableSchema</strong>: All built-in file sources now take the schema in their constructor:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- let source = ParquetSource::default();</span>
+<span class="gi">+ let source = ParquetSource::new(table_schema);</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>FileScanConfigBuilder no longer takes schema as a parameter</strong>: The schema is now passed via the FileSource:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- FileScanConfigBuilder::new(url, schema, source)</span>
+<span class="gi">+ FileScanConfigBuilder::new(url, source)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Partition columns are now part of TableSchema</strong>: The <code class="docutils literal notranslate"><span class="pre">with_table_partition_cols()</span></code> method has been removed from <code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder</span></code>. Partition columns are now passed as part of the <code class="docutils literal notranslate"><span class="pre">TableSchema</span></code> to the FileSource constructor:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gi">+ let table_schema = TableSchema::new(</span>
+<span class="gi">+     file_schema,</span>
+<span class="gi">+     vec![Arc::new(Field::new(&quot;date&quot;, DataType::Utf8, false))],</span>
+<span class="gi">+ );</span>
+<span class="gi">+ let source = ParquetSource::new(table_schema);</span>
+<span class="w"> </span> let config = FileScanConfigBuilder::new(url, source)
+<span class="gd">-     .with_table_partition_cols(vec![Field::new(&quot;date&quot;, DataType::Utf8, false)])</span>
+<span class="w"> </span>     .with_file(partitioned_file)
+<span class="w"> </span>     .build();
+</pre></div>
+</div>
+</li>
+<li><p><strong>FileFormat::file_source() now takes TableSchema parameter</strong>: Custom <code class="docutils literal notranslate"><span class="pre">FileFormat</span></code> implementations must be updated:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>impl FileFormat for MyFileFormat {
+<span class="gd">-   fn file_source(&amp;self) -&gt; Arc&lt;dyn FileSource&gt; {</span>
+<span class="gi">+   fn file_source(&amp;self, table_schema: TableSchema) -&gt; Arc&lt;dyn FileSource&gt; {</span>
+<span class="gd">-       Arc::new(MyFileSource::default())</span>
+<span class="gi">+       Arc::new(MyFileSource::new(table_schema))</span>
+<span class="w"> </span>   }
+}
+</pre></div>
+</div>
+</li>
+</ol>
+<p><strong>Migration examples:</strong></p>
+<p>For Parquet files:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- let source = Arc::new(ParquetSource::default());</span>
+<span class="gd">- let config = FileScanConfigBuilder::new(url, schema, source)</span>
+<span class="gi">+ let table_schema = TableSchema::new(schema, vec![]);</span>
+<span class="gi">+ let source = Arc::new(ParquetSource::new(table_schema));</span>
+<span class="gi">+ let config = FileScanConfigBuilder::new(url, source)</span>
+<span class="w"> </span>     .with_file(partitioned_file)
+<span class="w"> </span>     .build();
+</pre></div>
+</div>
+<p>For CSV files with partition columns:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- let source = Arc::new(CsvSource::new(true, b&#39;,&#39;, b&#39;&quot;&#39;));</span>
+<span class="gd">- let config = FileScanConfigBuilder::new(url, file_schema, source)</span>
+<span class="gd">-     .with_table_partition_cols(vec![Field::new(&quot;year&quot;, DataType::Int32, false)])</span>
+<span class="gi">+ let options = CsvOptions {</span>
+<span class="gi">+     has_header: Some(true),</span>
+<span class="gi">+     delimiter: b&#39;,&#39;,</span>
+<span class="gi">+     quote: b&#39;&quot;&#39;,</span>
+<span class="gi">+     ..Default::default()</span>
+<span class="gi">+ };</span>
+<span class="gi">+ let table_schema = TableSchema::new(</span>
+<span class="gi">+     file_schema,</span>
+<span class="gi">+     vec![Arc::new(Field::new(&quot;year&quot;, DataType::Int32, false))],</span>
+<span class="gi">+ );</span>
+<span class="gi">+ let source = Arc::new(CsvSource::new(table_schema).with_csv_options(options));</span>
+<span class="gi">+ let config = FileScanConfigBuilder::new(url, source)</span>
+<span class="w"> </span>     .build();
+</pre></div>
+</div>
 </section>
 <section id="introduction-of-tableschema-and-changes-to-filesource-with-schema-method">
 <h3>Introduction of <code class="docutils literal notranslate"><span class="pre">TableSchema</span></code> and changes to <code class="docutils literal notranslate"><span class="pre">FileSource::with_schema()</span></code> method<a class="headerlink" href="#introduction-of-tableschema-and-changes-to-filesource-with-schema-method" title="Link to this heading">#</a></h3>
@@ -1280,7 +1396,7 @@ DataFusion 47.0.0 this has been changed to use <code class="docutils literal not
 </pre></div>
 </div>
 <p>Pattern in DataFusion <code class="docutils literal notranslate"><span class="pre">47.0.0</span></code>:</p>
-<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FileScanConfigBuilder</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">schema</span><span class="p">,</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">file_source</span><span class="p">))</span>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FileScanConfigBuilder</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">file_source</span><span class="p">))</span>
 <span class="w">  </span><span class="p">.</span><span class="n">with_statistics</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
 <span class="w">  </span><span class="o">..</span><span class="p">.</span>
 <span class="w">  </span><span class="p">.</span><span class="n">build</span><span class="p">();</span>
@@ -1563,6 +1679,11 @@ take care of constructing the <code class="docutils literal notranslate"><span c
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datafusion-52-0-0">DataFusion <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#planner-now-requires-explicit-opt-in-for-within-group-syntax">Planner now requires explicit opt-in for WITHIN GROUP syntax</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregateudfimpl-supports-null-handling-clause-now-defaults-to-false"><code class="docutils literal notranslate"><span class="pre">AggregateUDFImpl::supports_null_handling_clause</span></code> now defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datafusion-51-0-0">DataFusion <code class="docutils literal notranslate"><span class="pre">51.0.0</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#arrow-parquet-updated-to-57-0-0"><code class="docutils literal notranslate"><span class="pre">arrow</span></code> / <code class="docutils literal notranslate"><span class="pre">parquet</span></code> updated to 57.0.0</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#upgrade-to-arrow-57-0-0-and-parquet-57-0-0">Upgrade to arrow <code class="docutils literal notranslate"><span class="pre">57.0.0</span></code> and parquet <code class="docutils literal notranslate"><span class="pre">57.0.0</span></code></a></li>
@@ -1575,6 +1696,7 @@ take care of constructing the <code class="docutils literal notranslate"><span c
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filescanconfig-projection-renamed-to-filescanconfig-projection-exprs"><code class="docutils literal notranslate"><span class="pre">FileScanConfig::projection</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">FileScanConfig::projection_exprs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#describe-query-support"><code class="docutils literal notranslate"><span class="pre">DESCRIBE</span> <span class="pre">query</span></code> support</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#datafusion-execution-time-zone-default-configuration-changed"><code class="docutils literal notranslate"><span class="pre">datafusion.execution.time_zone</span></code> default configuration changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#refactoring-of-filesource-constructors-and-filescanconfigbuilder-to-accept-schemas-upfront">Refactoring of <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> constructors and <code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder</span></code> to accept schemas upfront</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-of-tableschema-and-changes-to-filesource-with-schema-method">Introduction of <code class="docutils literal notranslate"><span class="pre">TableSchema</span></code> and changes to <code class="docutils literal notranslate"><span class="pre">FileSource::with_schema()</span></code> method</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregateudfimpl-is-ordered-set-aggregate-has-been-renamed-to-aggregateudfimpl-supports-within-group-clause"><code class="docutils literal notranslate"><span class="pre">AggregateUDFImpl::is_ordered_set_aggregate</span></code> has been renamed to <code class="docutils literal notranslate"><span class="pre">AggregateUDFImpl::supports_within_group_clause</span></code></a></li>
 </ul>
