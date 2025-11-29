@@ -406,7 +406,83 @@
 <section id="datafusion-52-0-0">
 <h2>DataFusion <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code><a class="headerlink" href="#datafusion-52-0-0" title="Link to this heading">#</a></h2>
 <p><strong>Note:</strong> DataFusion <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code> has not been released yet. The information provided in this section pertains to features and changes that have already been merged to the main branch and are awaiting release in this version.</p>
-<p>You can see the current <a class="reference external" href="https://github.com/apache/datafusion/issues/18566">status of the <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code> release here</a></p>
+<p>You can see the current <a class="reference external" href="https://github.com/apache/datafusion/issues/18566">status of the <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code>release here</a></p>
+<section id="removal-of-pyarrow-feature">
+<h3>Removal of <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> feature<a class="headerlink" href="#removal-of-pyarrow-feature" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> feature flag has been removed. This feature has been migrated to
+the <code class="docutils literal notranslate"><span class="pre">datafusion-python</span></code> repository since version <code class="docutils literal notranslate"><span class="pre">44.0.0</span></code>.</p>
+</section>
+<section id="statistics-handling-moved-from-filesource-to-filescanconfig">
+<h3>Statistics handling moved from <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> to <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code><a class="headerlink" href="#statistics-handling-moved-from-filesource-to-filescanconfig" title="Link to this heading">#</a></h3>
+<p>Statistics are now managed directly by <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code> instead of being delegated to <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementations. This simplifies the <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> trait and provides more consistent statistics handling across all file formats.</p>
+<p><strong>Who is affected:</strong></p>
+<ul class="simple">
+<li><p>Users who have implemented custom <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementations</p></li>
+</ul>
+<p><strong>Breaking changes:</strong></p>
+<p>Two methods have been removed from the <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> trait:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">with_statistics(&amp;self,</span> <span class="pre">statistics:</span> <span class="pre">Statistics)</span> <span class="pre">-&gt;</span> <span class="pre">Arc&lt;dyn</span> <span class="pre">FileSource&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">statistics(&amp;self)</span> <span class="pre">-&gt;</span> <span class="pre">Result&lt;Statistics&gt;</span></code></p></li>
+</ul>
+<p><strong>Migration guide:</strong></p>
+<p>If you have a custom <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementation, you need to:</p>
+<ol class="arabic simple">
+<li><p>Remove the <code class="docutils literal notranslate"><span class="pre">with_statistics</span></code> method implementation</p></li>
+<li><p>Remove the <code class="docutils literal notranslate"><span class="pre">statistics</span></code> method implementation</p></li>
+<li><p>Remove any internal state that was storing statistics</p></li>
+</ol>
+<p><strong>Before:</strong></p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="cp">#[derive(Clone)]</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MyCustomSource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">table_schema</span><span class="p">:</span><span class="w"> </span><span class="nc">TableSchema</span><span class="p">,</span>
+<span class="w">    </span><span class="n">projected_statistics</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="n">Statistics</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// other fields...</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">FileSource</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">MyCustomSource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">with_statistics</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">statistics</span><span class="p">:</span><span class="w"> </span><span class="nc">Statistics</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">FileSource</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="bp">Self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">table_schema</span><span class="p">:</span><span class="w"> </span><span class="nc">self</span><span class="p">.</span><span class="n">table_schema</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">projected_statistics</span><span class="p">:</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">statistics</span><span class="p">),</span>
+<span class="w">            </span><span class="c1">// other fields...</span>
+<span class="w">        </span><span class="p">})</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">statistics</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">Statistics</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">projected_statistics</span><span class="p">.</span><span class="n">clone</span><span class="p">().</span><span class="n">unwrap_or_else</span><span class="p">(</span><span class="o">||</span>
+<span class="w">            </span><span class="n">Statistics</span><span class="p">::</span><span class="n">new_unknown</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">table_schema</span><span class="p">.</span><span class="n">file_schema</span><span class="p">())</span>
+<span class="w">        </span><span class="p">))</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// other methods...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>After:</strong></p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="cp">#[derive(Clone)]</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MyCustomSource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">table_schema</span><span class="p">:</span><span class="w"> </span><span class="nc">TableSchema</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// projected_statistics field removed</span>
+<span class="w">    </span><span class="c1">// other fields...</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">FileSource</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">MyCustomSource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// with_statistics method removed</span>
+<span class="w">    </span><span class="c1">// statistics method removed</span>
+
+<span class="w">    </span><span class="c1">// other methods...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Accessing statistics:</strong></p>
+<p>Statistics are now accessed through <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code> instead of <code class="docutils literal notranslate"><span class="pre">FileSource</span></code>:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- let stats = config.file_source.statistics()?;</span>
+<span class="gi">+ let stats = config.statistics();</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">FileScanConfig::statistics()</span></code> automatically marks statistics as inexact when filters are present, ensuring correctness when filters are pushed down.</p>
+</section>
 <section id="planner-now-requires-explicit-opt-in-for-within-group-syntax">
 <h3>Planner now requires explicit opt-in for WITHIN GROUP syntax<a class="headerlink" href="#planner-now-requires-explicit-opt-in-for-within-group-syntax" title="Link to this heading">#</a></h3>
 <p>The SQL planner now enforces the aggregate UDF contract more strictly: the
@@ -441,6 +517,143 @@ unless they explicitly declare support by overriding the method.</p>
 </pre></div>
 </div>
 <p>Instead of silently succeeding.</p>
+</section>
+<section id="api-change-for-cacheaccessor-trait">
+<h3>API change for <code class="docutils literal notranslate"><span class="pre">CacheAccessor</span></code> trait<a class="headerlink" href="#api-change-for-cacheaccessor-trait" title="Link to this heading">#</a></h3>
+<p>The remove API no longer requires a mutable instance</p>
+</section>
+<section id="ffi-crate-updates">
+<h3>FFI crate updates<a class="headerlink" href="#ffi-crate-updates" title="Link to this heading">#</a></h3>
+<p>Many of the structs in the <code class="docutils literal notranslate"><span class="pre">datafusion-ffi</span></code> crate have been updated to allow easier
+conversion to the underlying trait types they represent. This simplifies some code
+paths, but also provides an additional improvement in cases where library code goes
+through a round trip via the foreign function interface.</p>
+<p>To update your code, suppose you have a <code class="docutils literal notranslate"><span class="pre">FFI_SchemaProvider</span></code> called <code class="docutils literal notranslate"><span class="pre">ffi_provider</span></code>
+and you wish to use this as a <code class="docutils literal notranslate"><span class="pre">SchemaProvider</span></code>. In the old approach you would do
+something like:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_provider</span><span class="p">:</span><span class="w"> </span><span class="nc">ForeignSchemaProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ffi_provider</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">foreign_provider</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">SchemaProvider</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This code should now be written as:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_provider</span><span class="p">:</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">SchemaProvider</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Send</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ffi_provider</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">foreign_provider</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">SchemaProvider</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For the case of user defined functions, the updates are similar but you
+may need to change the way you call the creation of the <code class="docutils literal notranslate"><span class="pre">ScalarUDF</span></code>.
+Aggregate and window functions follow the same pattern.</p>
+<p>Previously you may write:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_udf</span><span class="p">:</span><span class="w"> </span><span class="nc">ForeignScalarUDF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ffi_udf</span><span class="p">.</span><span class="n">try_into</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_udf</span><span class="p">:</span><span class="w"> </span><span class="nc">ScalarUDF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">foreign_udf</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Instead this should now be:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_udf</span><span class="p">:</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">ScalarUDFImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ffi_udf</span><span class="p">.</span><span class="n">try_into</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">foreign_udf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ScalarUDF</span><span class="p">::</span><span class="n">new_from_shared_impl</span><span class="p">(</span><span class="n">foreign_udf</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Additionally, the FFI structure for Scalar UDF’s no longer contains a
+<code class="docutils literal notranslate"><span class="pre">return_type</span></code> call. This code was not used since the <code class="docutils literal notranslate"><span class="pre">ForeignScalarUDF</span></code>
+struct implements the <code class="docutils literal notranslate"><span class="pre">return_field_from_args</span></code> instead.</p>
+</section>
+<section id="projection-handling-moved-from-filescanconfig-to-filesource">
+<h3>Projection handling moved from FileScanConfig to FileSource<a class="headerlink" href="#projection-handling-moved-from-filescanconfig-to-filesource" title="Link to this heading">#</a></h3>
+<p>Projection handling has been moved from <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code> into <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementations. This enables format-specific projection pushdown (e.g., Parquet can push down struct field access, Vortex can push down computed expressions into un-decoded data).</p>
+<p><strong>Who is affected:</strong></p>
+<ul class="simple">
+<li><p>Users who have implemented custom <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementations</p></li>
+<li><p>Users who use <code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder::with_projection_indices</span></code> directly</p></li>
+</ul>
+<p><strong>Breaking changes:</strong></p>
+<ol class="arabic">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FileSource::with_projection</span></code> replaced with <code class="docutils literal notranslate"><span class="pre">try_pushdown_projection</span></code>:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">with_projection(&amp;self,</span> <span class="pre">config:</span> <span class="pre">&amp;FileScanConfig)</span> <span class="pre">-&gt;</span> <span class="pre">Arc&lt;dyn</span> <span class="pre">FileSource&gt;</span></code> method has been removed and replaced with <code class="docutils literal notranslate"><span class="pre">try_pushdown_projection(&amp;self,</span> <span class="pre">projection:</span> <span class="pre">&amp;ProjectionExprs)</span> <span class="pre">-&gt;</span> <span class="pre">Result&lt;Option&lt;Arc&lt;dyn</span> <span class="pre">FileSource&gt;&gt;&gt;</span></code>.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FileScanConfig.projection_exprs</span></code> field removed:</strong></p>
+<p>Projections are now stored in the <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> directly, not in <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code>.
+Various public helper methods that access projection information have been removed from <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code>.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder::with_projection_indices</span></code> now returns <code class="docutils literal notranslate"><span class="pre">Result&lt;Self&gt;</span></code>:</strong></p>
+<p>This method can now fail if the projection pushdown fails.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FileSource::create_file_opener</span></code> now returns <code class="docutils literal notranslate"><span class="pre">Result&lt;Arc&lt;dyn</span> <span class="pre">FileOpener&gt;&gt;</span></code>:</strong></p>
+<p>Previously returned <code class="docutils literal notranslate"><span class="pre">Arc&lt;dyn</span> <span class="pre">FileOpener&gt;</span></code> directly.
+Any <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementation that may fail to create a <code class="docutils literal notranslate"><span class="pre">FileOpener</span></code> should now return an appropriate error.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DataSource::try_swapping_with_projection</span></code> signature changed:</strong></p>
+<p>Parameter changed from <code class="docutils literal notranslate"><span class="pre">&amp;[ProjectionExpr]</span></code> to <code class="docutils literal notranslate"><span class="pre">&amp;ProjectionExprs</span></code>.</p>
+</li>
+</ol>
+<p><strong>Migration guide:</strong></p>
+<p>If you have a custom <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementation:</p>
+<p><strong>Before:</strong></p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">impl</span><span class="w"> </span><span class="n">FileSource</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">MyCustomSource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">with_projection</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">FileScanConfig</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">FileSource</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Apply projection from config</span>
+<span class="w">        </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="bp">Self</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">create_file_opener</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
+<span class="w">        </span><span class="n">object_store</span><span class="p">:</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">ObjectStore</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">base_config</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">FileScanConfig</span><span class="p">,</span>
+<span class="w">        </span><span class="n">partition</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">FileOpener</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">MyOpener</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>After:</strong></p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">impl</span><span class="w"> </span><span class="n">FileSource</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">MyCustomSource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">try_pushdown_projection</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
+<span class="w">        </span><span class="n">projection</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">ProjectionExprs</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="nb">Option</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">FileSource</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Return None if projection cannot be pushed down</span>
+<span class="w">        </span><span class="c1">// Return Some(new_source) with projection applied if it can</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="nb">Some</span><span class="p">(</span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="bp">Self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">projection</span><span class="p">:</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">projection</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span>
+<span class="w">            </span><span class="cm">/* ... */</span>
+<span class="w">        </span><span class="p">})))</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">projection</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="n">ProjectionExprs</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">projection</span><span class="p">.</span><span class="n">as_ref</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">create_file_opener</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span>
+<span class="w">        </span><span class="n">object_store</span><span class="p">:</span><span class="w"> </span><span class="nc">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">ObjectStore</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">base_config</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">FileScanConfig</span><span class="p">,</span>
+<span class="w">        </span><span class="n">partition</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">Arc</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">FileOpener</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">MyOpener</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}))</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We recommend you look at <a class="reference external" href="https://github.com/apache/datafusion/pull/18627">#18627</a>
+that introduced these changes for more examples for how this was handled for the various built in file sources.</p>
+<p>We have added <a class="reference external" href="https://docs.rs/datafusion-datasource/latest/datafusion_datasource/projection/struct.SplitProjection.html"><code class="docutils literal notranslate"><span class="pre">SplitProjection</span></code></a> and <a class="reference external" href="https://docs.rs/datafusion-datasource/latest/datafusion_datasource/projection/struct.ProjectionOpener.html"><code class="docutils literal notranslate"><span class="pre">ProjectionOpener</span></code></a> helpers to make it easier to handle projections in your <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> implementations.</p>
+<p>For file sources that can only handle simple column selections (not computed expressions), use the <code class="docutils literal notranslate"><span class="pre">SplitProjection</span></code> and <code class="docutils literal notranslate"><span class="pre">ProjectionOpener</span></code> helpers to split the projection into pushdownable and non-pushdownable parts:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">use</span><span class="w"> </span><span class="n">datafusion_datasource</span><span class="p">::</span><span class="n">projection</span><span class="p">::{</span><span class="n">SplitProjection</span><span class="p">,</span><span class="w"> </span><span class="n">ProjectionOpener</span><span class="p">};</span>
+
+<span class="c1">// In try_pushdown_projection:</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">split</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SplitProjection</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">projection</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">table_schema</span><span class="p">())</span><span class="o">?</span><span class="p">;</span>
+<span class="c1">// Use split.file_projection() for what to push down to the file format</span>
+<span class="c1">// The ProjectionOpener wrapper will handle the rest</span>
+</pre></div>
+</div>
+<p><strong>For <code class="docutils literal notranslate"><span class="pre">FileScanConfigBuilder</span></code> users:</strong></p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>let config = FileScanConfigBuilder::new(url, source)
+<span class="gd">-   .with_projection_indices(Some(vec![0, 2, 3]))</span>
+<span class="gi">+   .with_projection_indices(Some(vec![0, 2, 3]))?</span>
+<span class="w"> </span>   .build();
+</pre></div>
+</div>
+<p><strong>Handling projections in <code class="docutils literal notranslate"><span class="pre">FileSource</span></code>:</strong></p>
 </section>
 </section>
 <section id="datafusion-51-0-0">
@@ -1097,7 +1310,7 @@ The first place this change has taken place is in predicate pushdown for Parquet
 By default if you do not use a custom <code class="docutils literal notranslate"><span class="pre">SchemaAdapterFactory</span></code> we will use expression conversion instead.
 If you do set a custom <code class="docutils literal notranslate"><span class="pre">SchemaAdapterFactory</span></code> we will continue to use it but emit a warning about that code path being deprecated.</p>
 <p>To resolve this you need to implement a custom <code class="docutils literal notranslate"><span class="pre">PhysicalExprAdapterFactory</span></code> and use that instead of a <code class="docutils literal notranslate"><span class="pre">SchemaAdapterFactory</span></code>.
-See the <a class="reference external" href="https://github.com/apache/datafusion/blob/main/datafusion-examples/examples/default_column_values.rs">default values</a> for an example of how to do this.
+See the <a class="reference external" href="https://github.com/apache/datafusion/blob/main/datafusion-examples/examples/custom_data_source/default_column_values.rs">default values</a> for an example of how to do this.
 Opting into the new APIs will set you up for future changes since we plan to expand use of <code class="docutils literal notranslate"><span class="pre">PhysicalExprAdapterFactory</span></code> to other areas of DataFusion.</p>
 <p>See <a class="reference external" href="https://github.com/apache/datafusion/issues/16800">#16800</a> for details.</p>
 </section>
@@ -1680,8 +1893,13 @@ take care of constructing the <code class="docutils literal notranslate"><span c
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datafusion-52-0-0">DataFusion <code class="docutils literal notranslate"><span class="pre">52.0.0</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removal-of-pyarrow-feature">Removal of <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> feature</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistics-handling-moved-from-filesource-to-filescanconfig">Statistics handling moved from <code class="docutils literal notranslate"><span class="pre">FileSource</span></code> to <code class="docutils literal notranslate"><span class="pre">FileScanConfig</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#planner-now-requires-explicit-opt-in-for-within-group-syntax">Planner now requires explicit opt-in for WITHIN GROUP syntax</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aggregateudfimpl-supports-null-handling-clause-now-defaults-to-false"><code class="docutils literal notranslate"><span class="pre">AggregateUDFImpl::supports_null_handling_clause</span></code> now defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-change-for-cacheaccessor-trait">API change for <code class="docutils literal notranslate"><span class="pre">CacheAccessor</span></code> trait</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ffi-crate-updates">FFI crate updates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#projection-handling-moved-from-filescanconfig-to-filesource">Projection handling moved from FileScanConfig to FileSource</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datafusion-51-0-0">DataFusion <code class="docutils literal notranslate"><span class="pre">51.0.0</span></code></a><ul class="nav section-nav flex-column">
