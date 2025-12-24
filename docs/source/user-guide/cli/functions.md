@@ -170,9 +170,6 @@ The columns of the returned table are:
 | table_size_bytes      | Utf8      | Size of the table, in bytes                                                  |
 | statistics_size_bytes | UInt64    | Size of the cached statistics in memory                                      |
 
-[`listingtable`]: https://docs.rs/datafusion/latest/datafusion/datasource/listing/struct.ListingTable.html
-[entity tag]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
-
 ## `list_files_cache`
 
 The `list_files_cache` function shows information about the `ListFilesCache` that is used by the [`ListingTable`] implementation in DataFusion. When creating a [`ListingTable`], DataFusion lists the files in the table's location and caches results in the `ListFilesCache`. Subsequent queries against the same table can reuse this cached information instead of re-listing the files.
