@@ -178,6 +178,7 @@ The columns of the returned table are:
 The `list_files_cache` function shows information about the `ListFilesCache` that is used by the [`ListingTable`] implementation in DataFusion. When creating a [`ListingTable`], DataFusion lists the files in the table's location and caches results in the `ListFilesCache`. Subsequent queries against the same table can reuse this cached information instead of re-listing the files.
 
 You can inspect the cache by querying the `list_files_cache` function. For example,
+
 ```sql
 > select split_part(path, '/', -1) as folder, metadata_size_bytes, expires_in, unnest(metadata_list)['file_size_bytes'] as file_size_bytes, unnest(metadata_list)['e_tag'] as e_tag from list_files_cache();
 +----------+---------------------+-----------------------------------+-----------------+-------------------------------+
@@ -203,12 +204,12 @@ You can inspect the cache by querying the `list_files_cache` function. For examp
 ```
 
 The columns of the returned table are:
-| column_name         | data_type    | Description                                                                               |
+| column_name | data_type | Description |
 | ------------------- | ------------ | ----------------------------------------------------------------------------------------- |
-| path                | Utf8         | File path relative to the object store / filesystem root                                  |
-| metadata_size_bytes | UInt64       | Size of the cached metadata in memory (not its thrift encoded form)                       |
-| expires_in          | Duration(ms) | Last modified time of the file                                                            |
-| metadata_list       | List(Struct) | List of metadatas, one for each file under the path.                                      |
+| path | Utf8 | File path relative to the object store / filesystem root |
+| metadata_size_bytes | UInt64 | Size of the cached metadata in memory (not its thrift encoded form) |
+| expires_in | Duration(ms) | Last modified time of the file |
+| metadata_list | List(Struct) | List of metadatas, one for each file under the path. |
 
 [`listingtable`]: https://docs.rs/datafusion/latest/datafusion/datasource/listing/struct.ListingTable.html
 [entity tag]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
