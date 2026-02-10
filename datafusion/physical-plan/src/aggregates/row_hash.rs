@@ -23,6 +23,7 @@ use std::vec;
 
 use super::AggregateExec;
 use super::order::GroupOrdering;
+use crate::aggregates::group_values::single_group_by::integer::try_use_direct_indexing;
 use crate::aggregates::group_values::{GroupByMetrics, GroupValues, new_group_values};
 use crate::aggregates::order::GroupOrderingFull;
 use crate::aggregates::{
@@ -33,7 +34,7 @@ use crate::metrics::{BaselineMetrics, MetricBuilder, RecordOutput};
 use crate::sorts::sort::sort_batch;
 use crate::sorts::streaming_merge::{SortedSpillFile, StreamingMergeBuilder};
 use crate::spill::spill_manager::SpillManager;
-use crate::{PhysicalExpr, aggregates, metrics};
+use crate::{ExecutionPlan, PhysicalExpr, aggregates, metrics};
 use crate::{RecordBatchStream, SendableRecordBatchStream};
 
 use arrow::array::*;
@@ -586,7 +587,22 @@ impl GroupedHashAggregateStream {
             _ => OutOfMemoryMode::ReportError,
         };
 
-        let group_values = new_group_values(group_schema, &group_ordering)?;
+        let column_stats = agg.partition_statistics(Some(partition))?.column_statistics;
+        let direct_indexing_threshold = context
+            .session_config()
+            .options()
+            .execution
+            .grouped_hash_aggregate_direct_indexing_threshold;
+        let group_values = if let Ok(Some(group_value)) = try_use_direct_indexing(
+            &group_schema,
+            &column_stats,
+            direct_indexing_threshold,
+        ) {
+            debug!("using direct indexing");
+            group_value
+        } else {
+            new_group_values(group_schema, &group_ordering)?
+        };
         let reservation = MemoryConsumer::new(name)
             // We interpret 'can spill' as 'can handle memory back pressure'.
             // This value needs to be set to true for the default memory pool implementations
