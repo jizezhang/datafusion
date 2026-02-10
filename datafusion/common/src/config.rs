@@ -491,8 +491,8 @@ config_namespace! {
         /// Maximum range size for which direct indexing will be used
         /// in grouped hash aggregations on a single integer column.
         ///
-        /// When performing a `GROUP BY` on a single integer column with a small, dense range of values, 
-        /// DataFusion can use direct array indexing instead of hash-based grouping for better performance. 
+        /// When performing a `GROUP BY` on a single integer column with a small, dense range of values,
+        /// DataFusion can use direct array indexing instead of hash-based grouping for better performance.
         /// This optimization applies when column statistics (min/max) are available.
         ///
         /// Setting this too high may cause excessive memory allocation for sparse data.
