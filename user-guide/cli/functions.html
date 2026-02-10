@@ -31,7 +31,7 @@
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=0b9a6302" />
+    <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=d08b24aa" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,9 +40,10 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide/cli/functions';</script>
+    <link rel="icon" href="../../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="DataFrame API" href="../dataframe.html" />
@@ -248,6 +249,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../expressions.html">Expression API</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../sql/index.html">SQL Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../sql/data_types.html">Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql/struct_coercion.html">Struct Type Coercion and Field Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sql/select.html">SELECT syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sql/subqueries.html">Subqueries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sql/ddl.html">DDL</a></li>
@@ -276,7 +278,18 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/index.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/upgrading.html">Upgrade Guides</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../library-user-guide/upgrading/index.html">Upgrade Guides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/53.0.0.html">DataFusion 53.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/52.0.0.html">DataFusion 52.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/51.0.0.html">DataFusion 51.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/50.0.0.html">DataFusion 50.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/49.0.0.html">DataFusion 49.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/48.0.1.html">DataFusion 48.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/48.0.0.html">DataFusion 48.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/47.0.0.html">DataFusion 47.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/46.0.0.html">DataFusion 46.0.0</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extensions.html">Extensions List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/using-the-sql-api.html">Using the SQL API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extending-sql.html">Extending SQL Syntax</a></li>
@@ -292,17 +305,18 @@
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/custom-table-providers.html">Custom Table Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/table-constraints.html">Table Constraint Enforcement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extending-operators.html">Extending DataFusion’s operators: custom LogicalPlan and Execution Plans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extending-operators.html">Extending Operators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/profiling.html">Profiling Cookbook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/query-optimizer.html">DataFusion Query Optimizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/query-optimizer.html">Query Optimizer</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributor Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/index.html">Introduction</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/communication.html">Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/communication.html">Community Communication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/development_environment.html">Development Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/architecture/dependency-graph.html">Workspace Dependency Graph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/api-health.html">API health policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide/howtos.html">HOWTOs</a></li>
@@ -683,6 +697,75 @@ enabled.</p>
 </table>
 </div>
 </section>
+<section id="list-files-cache">
+<h2><code class="docutils literal notranslate"><span class="pre">list_files_cache</span></code><a class="headerlink" href="#list-files-cache" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">list_files_cache</span></code> function shows information about the <code class="docutils literal notranslate"><span class="pre">ListFilesCache</span></code> that is used by the <a class="reference external" href="https://docs.rs/datafusion/latest/datafusion/datasource/listing/struct.ListingTable.html"><code class="docutils literal notranslate"><span class="pre">ListingTable</span></code></a> implementation in DataFusion. When creating a <a class="reference external" href="https://docs.rs/datafusion/latest/datafusion/datasource/listing/struct.ListingTable.html"><code class="docutils literal notranslate"><span class="pre">ListingTable</span></code></a>, DataFusion lists the files in the table’s location and caches results in the <code class="docutils literal notranslate"><span class="pre">ListFilesCache</span></code>. Subsequent queries against the same table can reuse this cached information instead of re-listing the files. Cache entries are scoped to tables.</p>
+<p>You can inspect the cache by querying the <code class="docutils literal notranslate"><span class="pre">list_files_cache</span></code> function. For example,</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">datafusion</span><span class="p">.</span><span class="n">runtime</span><span class="p">.</span><span class="n">list_files_cache_ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;30s&quot;</span><span class="p">;</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="k">external</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">overturemaps</span>
+<span class="n">stored</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">parquet</span>
+<span class="k">location</span><span class="w"> </span><span class="s1">&#39;s3://overturemaps-us-west-2/release/2025-12-17.0/theme=base/type=infrastructure&#39;</span><span class="p">;</span>
+<span class="mi">0</span><span class="w"> </span><span class="k">row</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="n">fetched</span><span class="p">.</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">table</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">metadata_size_bytes</span><span class="p">,</span><span class="w"> </span><span class="n">expires_in</span><span class="p">,</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">metadata_list</span><span class="p">)[</span><span class="s1">&#39;file_size_bytes&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">file_size_bytes</span><span class="p">,</span><span class="w"> </span><span class="k">unnest</span><span class="p">(</span><span class="n">metadata_list</span><span class="p">)[</span><span class="s1">&#39;e_tag&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">e_tag</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">list_files_cache</span><span class="p">()</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------------+-----------------------------------------------------+---------------------+-----------------------------------+-----------------+---------------------------------------+</span>
+<span class="o">|</span><span class="w"> </span><span class="k">table</span><span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">path</span><span class="w">                                                </span><span class="o">|</span><span class="w"> </span><span class="n">metadata_size_bytes</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">expires_in</span><span class="w">                        </span><span class="o">|</span><span class="w"> </span><span class="n">file_size_bytes</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">e_tag</span><span class="w">                                 </span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------+-----------------------------------------------------+---------------------+-----------------------------------+-----------------+---------------------------------------+</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">999055952</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;35fc8fbe8400960b54c66fbb408c48e8-60&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">975592768</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;8a16e10b722681cdc00242564b502965-59&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1082925747</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;24cd13ddb5e0e438952d2499f5dabe06-65&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1008425557</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;37663e31c7c64d4ef355882bcd47e361-61&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1065561905</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;4e7c50d2d1b3c5ed7b82b4898f5ac332-64&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1045655427</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;8fff7e6a72d375eba668727c55d4f103-63&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1086822683</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;b67167d8022d778936c330a52a5f1922-65&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1016732378</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;6d70857a0473ed9ed3fc6e149814168b-61&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">991363784</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;c9cafb42fcbb413f851691c895dd7c2b-60&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="n">overturemaps</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">release</span><span class="o">/</span><span class="mi">2025</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">17</span><span class="p">.</span><span class="mi">0</span><span class="o">/</span><span class="n">theme</span><span class="o">=</span><span class="n">base</span><span class="o">/</span><span class="k">type</span><span class="o">=</span><span class="n">infrastructure</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2750</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">days</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">hours</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">mins</span><span class="w"> </span><span class="mi">25</span><span class="p">.</span><span class="mi">264</span><span class="w"> </span><span class="n">secs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1032469715</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="ss">&quot;7540252d0d67158297a67038a3365e0f-62&quot;</span><span class="w"> </span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------+-----------------------------------------------------+---------------------+-----------------------------------+-----------------+---------------------------------------+</span>
+</pre></div>
+</div>
+<p>The columns of the returned table are:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>column_name</p></th>
+<th class="head"><p>data_type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>table</p></td>
+<td><p>Utf8</p></td>
+<td><p>Name of the table</p></td>
+</tr>
+<tr class="row-odd"><td><p>path</p></td>
+<td><p>Utf8</p></td>
+<td><p>File path relative to the object store / filesystem root</p></td>
+</tr>
+<tr class="row-even"><td><p>metadata_size_bytes</p></td>
+<td><p>UInt64</p></td>
+<td><p>Size of the cached metadata in memory (not its thrift encoded form)</p></td>
+</tr>
+<tr class="row-odd"><td><p>expires_in</p></td>
+<td><p>Duration(ms)</p></td>
+<td><p>Last modified time of the file</p></td>
+</tr>
+<tr class="row-even"><td><p>metadata_list</p></td>
+<td><p>List(Struct)</p></td>
+<td><p>List of metadatas, one for each file under the path.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A metadata struct in the metadata_list contains the following fields:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+  &quot;file_path&quot;: &quot;release/2025-12-17.0/theme=base/type=infrastructure/part-00000-d556e455-e0c5-4940-b367-daff3287a952-c000.zstd.parquet&quot;,
+  &quot;file_modified&quot;: &quot;2025-12-17T22:20:29&quot;,
+  &quot;file_size_bytes&quot;: 999055952,
+  &quot;e_tag&quot;: &quot;35fc8fbe8400960b54c66fbb408c48e8-60&quot;,
+  &quot;version&quot;: null
+}
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -735,6 +818,7 @@ enabled.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parquet-metadata"><code class="docutils literal notranslate"><span class="pre">parquet_metadata</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metadata-cache"><code class="docutils literal notranslate"><span class="pre">metadata_cache</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistics-cache"><code class="docutils literal notranslate"><span class="pre">statistics_cache</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#list-files-cache"><code class="docutils literal notranslate"><span class="pre">list_files_cache</span></code></a></li>
 </ul>
   </nav></div>
 

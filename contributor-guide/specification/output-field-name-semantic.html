@@ -31,7 +31,7 @@
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=0b9a6302" />
+    <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=d08b24aa" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,9 +40,10 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'contributor-guide/specification/output-field-name-semantic';</script>
+    <link rel="icon" href="../../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Google Summer of Code (GSOC)" href="../gsoc/index.html" />
@@ -248,6 +249,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide/expressions.html">Expression API</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../user-guide/sql/index.html">SQL Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../user-guide/sql/data_types.html">Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user-guide/sql/struct_coercion.html">Struct Type Coercion and Field Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user-guide/sql/select.html">SELECT syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user-guide/sql/subqueries.html">Subqueries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user-guide/sql/ddl.html">DDL</a></li>
@@ -276,7 +278,18 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/index.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/upgrading.html">Upgrade Guides</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../library-user-guide/upgrading/index.html">Upgrade Guides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/53.0.0.html">DataFusion 53.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/52.0.0.html">DataFusion 52.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/51.0.0.html">DataFusion 51.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/50.0.0.html">DataFusion 50.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/49.0.0.html">DataFusion 49.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/48.0.1.html">DataFusion 48.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/48.0.0.html">DataFusion 48.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/47.0.0.html">DataFusion 47.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../library-user-guide/upgrading/46.0.0.html">DataFusion 46.0.0</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extensions.html">Extensions List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/using-the-sql-api.html">Using the SQL API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extending-sql.html">Extending SQL Syntax</a></li>
@@ -292,17 +305,18 @@
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/custom-table-providers.html">Custom Table Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/table-constraints.html">Table Constraint Enforcement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extending-operators.html">Extending DataFusion’s operators: custom LogicalPlan and Execution Plans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/extending-operators.html">Extending Operators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/profiling.html">Profiling Cookbook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/query-optimizer.html">DataFusion Query Optimizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../library-user-guide/query-optimizer.html">Query Optimizer</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributor Guide</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="../communication.html">Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../communication.html">Community Communication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development_environment.html">Development Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/dependency-graph.html">Workspace Dependency Graph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api-health.html">API health policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howtos.html">HOWTOs</a></li>

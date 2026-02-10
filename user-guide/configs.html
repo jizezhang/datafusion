@@ -31,7 +31,7 @@
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=0b9a6302" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d08b24aa" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,9 +40,10 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide/configs';</script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Reading Explain Plans" href="explain-usage.html" />
@@ -248,6 +249,7 @@
 <li class="toctree-l1"><a class="reference internal" href="expressions.html">Expression API</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="sql/index.html">SQL Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="sql/data_types.html">Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sql/struct_coercion.html">Struct Type Coercion and Field Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sql/select.html">SELECT syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sql/subqueries.html">Subqueries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sql/ddl.html">DDL</a></li>
@@ -276,7 +278,18 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../library-user-guide/index.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../library-user-guide/upgrading.html">Upgrade Guides</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../library-user-guide/upgrading/index.html">Upgrade Guides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/53.0.0.html">DataFusion 53.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/52.0.0.html">DataFusion 52.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/51.0.0.html">DataFusion 51.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/50.0.0.html">DataFusion 50.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/49.0.0.html">DataFusion 49.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/48.0.1.html">DataFusion 48.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/48.0.0.html">DataFusion 48.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/47.0.0.html">DataFusion 47.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../library-user-guide/upgrading/46.0.0.html">DataFusion 46.0.0</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../library-user-guide/extensions.html">Extensions List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library-user-guide/using-the-sql-api.html">Using the SQL API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library-user-guide/extending-sql.html">Extending SQL Syntax</a></li>
@@ -292,17 +305,18 @@
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../library-user-guide/custom-table-providers.html">Custom Table Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library-user-guide/table-constraints.html">Table Constraint Enforcement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../library-user-guide/extending-operators.html">Extending DataFusion’s operators: custom LogicalPlan and Execution Plans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library-user-guide/extending-operators.html">Extending Operators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../library-user-guide/profiling.html">Profiling Cookbook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../library-user-guide/query-optimizer.html">DataFusion Query Optimizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../library-user-guide/query-optimizer.html">Query Optimizer</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributor Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/index.html">Introduction</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="../contributor-guide/communication.html">Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor-guide/communication.html">Community Communication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/development_environment.html">Development Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor-guide/architecture/dependency-graph.html">Workspace Dependency Graph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/api-health.html">API health policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/howtos.html">HOWTOs</a></li>
@@ -482,6 +496,14 @@ example, to configure <code class="docutils literal notranslate"><span class="pr
 <td><p>8192</p></td>
 <td><p>Default batch size while creating new batches, it’s especially useful for buffer-in-memory batches since creating tiny batches would result in too much metadata memory consumption</p></td>
 </tr>
+<tr class="row-odd"><td><p>datafusion.execution.perfect_hash_join_small_build_threshold</p></td>
+<td><p>1024</p></td>
+<td><p>A perfect hash join (see <code class="docutils literal notranslate"><span class="pre">HashJoinExec</span></code> for more details) will be considered if the range of keys (max - min) on the build side is &lt; this threshold. This provides a fast path for joins with very small key ranges, bypassing the density check. Currently only supports cases where build_side.num_rows() &lt; u32::MAX. Support for build_side.num_rows() &gt;= u32::MAX will be added in the future.</p></td>
+</tr>
+<tr class="row-even"><td><p>datafusion.execution.perfect_hash_join_min_key_density</p></td>
+<td><p>0.15</p></td>
+<td><p>The minimum required density of join keys on the build side to consider a perfect hash join (see <code class="docutils literal notranslate"><span class="pre">HashJoinExec</span></code> for more details). Density is calculated as: <code class="docutils literal notranslate"><span class="pre">(number</span> <span class="pre">of</span> <span class="pre">rows)</span> <span class="pre">/</span> <span class="pre">(max_key</span> <span class="pre">-</span> <span class="pre">min_key</span> <span class="pre">+</span> <span class="pre">1)</span></code>. A perfect hash join may be used if the actual key density &gt; this value. Currently only supports cases where build_side.num_rows() &lt; u32::MAX. Support for build_side.num_rows() &gt;= u32::MAX will be added in the future.</p></td>
+</tr>
 <tr class="row-odd"><td><p>datafusion.execution.coalesce_batches</p></td>
 <td><p>true</p></td>
 <td><p>When set to true, record batches will be examined between each operator and small batches will be coalesced into larger batches. This is helpful when there are highly selective filters or joins that could produce tiny output batches. The target batch size is determined by the configuration setting</p></td>
@@ -552,7 +574,7 @@ example, to configure <code class="docutils literal notranslate"><span class="pr
 </tr>
 <tr class="row-even"><td><p>datafusion.execution.parquet.write_batch_size</p></td>
 <td><p>1024</p></td>
-<td><p>(writing) Sets write_batch_size in bytes</p></td>
+<td><p>(writing) Sets write_batch_size in rows</p></td>
 </tr>
 <tr class="row-odd"><td><p>datafusion.execution.parquet.writer_version</p></td>
 <td><p>1.0</p></td>
@@ -564,7 +586,7 @@ example, to configure <code class="docutils literal notranslate"><span class="pr
 </tr>
 <tr class="row-odd"><td><p>datafusion.execution.parquet.compression</p></td>
 <td><p>zstd(3)</p></td>
-<td><p>(writing) Sets default parquet compression codec. Valid values are: uncompressed, snappy, gzip(level), lzo, brotli(level), lz4, zstd(level), and lz4_raw. These values are not case sensitive. If NULL, uses default parquet writer setting Note that this default setting is not the same as the default parquet writer setting.</p></td>
+<td><p>(writing) Sets default parquet compression codec. Valid values are: uncompressed, snappy, gzip(level), brotli(level), lz4, zstd(level), and lz4_raw. These values are not case sensitive. If NULL, uses default parquet writer setting Note that this default setting is not the same as the default parquet writer setting.</p></td>
 </tr>
 <tr class="row-even"><td><p>datafusion.execution.parquet.dictionary_enabled</p></td>
 <td><p>true</p></td>
@@ -583,7 +605,7 @@ example, to configure <code class="docutils literal notranslate"><span class="pr
 <td><p>(writing) Target maximum number of rows in each row group (defaults to 1M rows). Writing larger row groups requires more memory to write, but can get better compression and be faster to read.</p></td>
 </tr>
 <tr class="row-even"><td><p>datafusion.execution.parquet.created_by</p></td>
-<td><p>datafusion version 51.0.0</p></td>
+<td><p>datafusion version 52.1.0</p></td>
 <td><p>(writing) Sets “created by” property</p></td>
 </tr>
 <tr class="row-odd"><td><p>datafusion.execution.parquet.column_index_truncate_length</p></td>
@@ -778,57 +800,65 @@ example, to configure <code class="docutils literal notranslate"><span class="pr
 <td><p>true</p></td>
 <td><p>Should DataFusion execute sorts in a per-partition fashion and merge afterwards instead of coalescing first and sorting globally. With this flag is enabled, plans in the form below <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">&quot;SortExec:</span> <span class="pre">[a&#64;0</span> <span class="pre">ASC]&quot;,</span> <span class="pre">&quot;</span> <span class="pre">CoalescePartitionsExec&quot;,</span> <span class="pre">&quot;</span> <span class="pre">RepartitionExec:</span> <span class="pre">partitioning=RoundRobinBatch(8),</span> <span class="pre">input_partitions=1&quot;,</span> </code> would turn into the plan below which performs better in multithreaded environments <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">&quot;SortPreservingMergeExec:</span> <span class="pre">[a&#64;0</span> <span class="pre">ASC]&quot;,</span> <span class="pre">&quot;</span> <span class="pre">SortExec:</span> <span class="pre">[a&#64;0</span> <span class="pre">ASC]&quot;,</span> <span class="pre">&quot;</span> <span class="pre">RepartitionExec:</span> <span class="pre">partitioning=RoundRobinBatch(8),</span> <span class="pre">input_partitions=1&quot;,</span> </code></p></td>
 </tr>
-<tr class="row-odd"><td><p>datafusion.optimizer.prefer_existing_sort</p></td>
+<tr class="row-odd"><td><p>datafusion.optimizer.subset_repartition_threshold</p></td>
+<td><p>4</p></td>
+<td><p>Partition count threshold for subset satisfaction optimization. When the current partition count is &gt;= this threshold, DataFusion will skip repartitioning if the required partitioning expression is a subset of the current partition expression such as Hash(a) satisfies Hash(a, b). When the current partition count is &lt; this threshold, DataFusion will repartition to increase parallelism even when subset satisfaction applies. Set to 0 to always repartition (disable subset satisfaction optimization). Set to a high value to always use subset satisfaction. Example (subset_repartition_threshold = 4): <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">Hash([a])</span> <span class="pre">satisfies</span> <span class="pre">Hash([a,</span> <span class="pre">b])</span> <span class="pre">because</span> <span class="pre">(Hash([a,</span> <span class="pre">b])</span> <span class="pre">is</span> <span class="pre">subset</span> <span class="pre">of</span> <span class="pre">Hash([a])</span> <span class="pre">If</span> <span class="pre">current</span> <span class="pre">partitions</span> <span class="pre">(3)</span> <span class="pre">&lt;</span> <span class="pre">threshold</span> <span class="pre">(4),</span> <span class="pre">repartition:</span> <span class="pre">AggregateExec:</span> <span class="pre">mode=FinalPartitioned,</span> <span class="pre">gby=[a,</span> <span class="pre">b],</span> <span class="pre">aggr=[SUM(x)]</span> <span class="pre">RepartitionExec:</span> <span class="pre">partitioning=Hash([a,</span> <span class="pre">b],</span> <span class="pre">8),</span> <span class="pre">input_partitions=3</span> <span class="pre">AggregateExec:</span> <span class="pre">mode=Partial,</span> <span class="pre">gby=[a,</span> <span class="pre">b],</span> <span class="pre">aggr=[SUM(x)]</span> <span class="pre">DataSourceExec:</span> <span class="pre">file_groups={...},</span> <span class="pre">output_partitioning=Hash([a],</span> <span class="pre">3)</span> <span class="pre">If</span> <span class="pre">current</span> <span class="pre">partitions</span> <span class="pre">(8)</span> <span class="pre">&gt;=</span> <span class="pre">threshold</span> <span class="pre">(4),</span> <span class="pre">use</span> <span class="pre">subset</span> <span class="pre">satisfaction:</span> <span class="pre">AggregateExec:</span> <span class="pre">mode=SinglePartitioned,</span> <span class="pre">gby=[a,</span> <span class="pre">b],</span> <span class="pre">aggr=[SUM(x)]</span> <span class="pre">DataSourceExec:</span> <span class="pre">file_groups={...},</span> <span class="pre">output_partitioning=Hash([a],</span> <span class="pre">8)</span> </code></p></td>
+</tr>
+<tr class="row-even"><td><p>datafusion.optimizer.prefer_existing_sort</p></td>
 <td><p>false</p></td>
 <td><p>When true, DataFusion will opportunistically remove sorts when the data is already sorted, (i.e. setting <code class="docutils literal notranslate"><span class="pre">preserve_order</span></code> to true on <code class="docutils literal notranslate"><span class="pre">RepartitionExec</span></code> and using <code class="docutils literal notranslate"><span class="pre">SortPreservingMergeExec</span></code>) When false, DataFusion will maximize plan parallelism using <code class="docutils literal notranslate"><span class="pre">RepartitionExec</span></code> even if this requires subsequently resorting data using a <code class="docutils literal notranslate"><span class="pre">SortExec</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p>datafusion.optimizer.skip_failed_rules</p></td>
+<tr class="row-odd"><td><p>datafusion.optimizer.skip_failed_rules</p></td>
 <td><p>false</p></td>
 <td><p>When set to true, the logical plan optimizer will produce warning messages if any optimization rules produce errors and then proceed to the next rule. When set to false, any rules that produce errors will cause the query to fail</p></td>
 </tr>
-<tr class="row-odd"><td><p>datafusion.optimizer.max_passes</p></td>
+<tr class="row-even"><td><p>datafusion.optimizer.max_passes</p></td>
 <td><p>3</p></td>
 <td><p>Number of times that the optimizer will attempt to optimize the plan</p></td>
 </tr>
-<tr class="row-even"><td><p>datafusion.optimizer.top_down_join_key_reordering</p></td>
+<tr class="row-odd"><td><p>datafusion.optimizer.top_down_join_key_reordering</p></td>
 <td><p>true</p></td>
 <td><p>When set to true, the physical plan optimizer will run a top down process to reorder the join keys</p></td>
 </tr>
-<tr class="row-odd"><td><p>datafusion.optimizer.prefer_hash_join</p></td>
+<tr class="row-even"><td><p>datafusion.optimizer.prefer_hash_join</p></td>
 <td><p>true</p></td>
 <td><p>When set to true, the physical plan optimizer will prefer HashJoin over SortMergeJoin. HashJoin can work more efficiently than SortMergeJoin but consumes more memory</p></td>
 </tr>
-<tr class="row-even"><td><p>datafusion.optimizer.enable_piecewise_merge_join</p></td>
+<tr class="row-odd"><td><p>datafusion.optimizer.enable_piecewise_merge_join</p></td>
 <td><p>false</p></td>
 <td><p>When set to true, piecewise merge join is enabled. PiecewiseMergeJoin is currently experimental. Physical planner will opt for PiecewiseMergeJoin when there is only one range filter.</p></td>
 </tr>
-<tr class="row-odd"><td><p>datafusion.optimizer.hash_join_single_partition_threshold</p></td>
+<tr class="row-even"><td><p>datafusion.optimizer.hash_join_single_partition_threshold</p></td>
 <td><p>1048576</p></td>
 <td><p>The maximum estimated size in bytes for one input side of a HashJoin will be collected into a single partition</p></td>
 </tr>
-<tr class="row-even"><td><p>datafusion.optimizer.hash_join_single_partition_threshold_rows</p></td>
+<tr class="row-odd"><td><p>datafusion.optimizer.hash_join_single_partition_threshold_rows</p></td>
 <td><p>131072</p></td>
 <td><p>The maximum estimated size in rows for one input side of a HashJoin will be collected into a single partition</p></td>
 </tr>
-<tr class="row-odd"><td><p>datafusion.optimizer.hash_join_inlist_pushdown_max_size</p></td>
+<tr class="row-even"><td><p>datafusion.optimizer.hash_join_inlist_pushdown_max_size</p></td>
 <td><p>131072</p></td>
 <td><p>Maximum size in bytes for the build side of a hash join to be pushed down as an InList expression for dynamic filtering. Build sides larger than this will use hash table lookups instead. Set to 0 to always use hash table lookups. InList pushdown can be more efficient for small build sides because it can result in better statistics pruning as well as use any bloom filters present on the scan side. InList expressions are also more transparent and easier to serialize over the network in distributed uses of DataFusion. On the other hand InList pushdown requires making a copy of the data and thus adds some overhead to the build side and uses more memory. This setting is per-partition, so we may end up using <code class="docutils literal notranslate"><span class="pre">hash_join_inlist_pushdown_max_size</span></code> * <code class="docutils literal notranslate"><span class="pre">target_partitions</span></code> memory. The default is 128kB per partition. This should allow point lookup joins (e.g. joining on a unique primary key) to use InList pushdown in most cases but avoids excessive memory usage or overhead for larger joins.</p></td>
 </tr>
-<tr class="row-even"><td><p>datafusion.optimizer.hash_join_inlist_pushdown_max_distinct_values</p></td>
+<tr class="row-odd"><td><p>datafusion.optimizer.hash_join_inlist_pushdown_max_distinct_values</p></td>
 <td><p>150</p></td>
 <td><p>Maximum number of distinct values (rows) in the build side of a hash join to be pushed down as an InList expression for dynamic filtering. Build sides with more rows than this will use hash table lookups instead. Set to 0 to always use hash table lookups. This provides an additional limit beyond <code class="docutils literal notranslate"><span class="pre">hash_join_inlist_pushdown_max_size</span></code> to prevent very large IN lists that might not provide much benefit over hash table lookups. This uses the deduplicated row count once the build side has been evaluated. The default is 150 values per partition. This is inspired by Trino’s <code class="docutils literal notranslate"><span class="pre">max-filter-keys-per-column</span></code> setting. See: <a class="reference external" href="https://trino.io/docs/current/admin/dynamic-filtering.html#dynamic-filter-collection-thresholds">https://trino.io/docs/current/admin/dynamic-filtering.html#dynamic-filter-collection-thresholds</a></p></td>
 </tr>
-<tr class="row-odd"><td><p>datafusion.optimizer.default_filter_selectivity</p></td>
+<tr class="row-even"><td><p>datafusion.optimizer.default_filter_selectivity</p></td>
 <td><p>20</p></td>
 <td><p>The default filter selectivity used by Filter Statistics when an exact selectivity cannot be determined. Valid values are between 0 (no selectivity) and 100 (all rows are selected).</p></td>
 </tr>
-<tr class="row-even"><td><p>datafusion.optimizer.prefer_existing_union</p></td>
+<tr class="row-odd"><td><p>datafusion.optimizer.prefer_existing_union</p></td>
 <td><p>false</p></td>
 <td><p>When set to true, the optimizer will not attempt to convert Union to Interleave</p></td>
 </tr>
-<tr class="row-odd"><td><p>datafusion.optimizer.expand_views_at_output</p></td>
+<tr class="row-even"><td><p>datafusion.optimizer.expand_views_at_output</p></td>
 <td><p>false</p></td>
 <td><p>When set to true, if the returned type is a view type then the output will be coerced to a non-view. Coerces <code class="docutils literal notranslate"><span class="pre">Utf8View</span></code> to <code class="docutils literal notranslate"><span class="pre">LargeUtf8</span></code>, and <code class="docutils literal notranslate"><span class="pre">BinaryView</span></code> to <code class="docutils literal notranslate"><span class="pre">LargeBinary</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>datafusion.optimizer.enable_sort_pushdown</p></td>
+<td><p>true</p></td>
+<td><p>Enable sort pushdown optimization. When enabled, attempts to push sort requirements down to data sources that can natively handle them (e.g., by reversing file/row group read order). Returns <strong>inexact ordering</strong>: Sort operator is kept for correctness, but optimized input enables early termination for TopK queries (ORDER BY … LIMIT N), providing significant speedup. Memory: No additional overhead (only changes read order). Future: Will add option to detect perfectly sorted data and eliminate Sort completely. Default: true</p></td>
 </tr>
 <tr class="row-even"><td><p>datafusion.explain.logical_plan_only</p></td>
 <td><p>false</p></td>
@@ -956,6 +986,14 @@ example, to configure <code class="docutils literal notranslate"><span class="pr
 </tr>
 </thead>
 <tbody>
+<tr class="row-even"><td><p>datafusion.runtime.list_files_cache_limit</p></td>
+<td><p>1M</p></td>
+<td><p>Maximum memory to use for list files cache. Supports suffixes K (kilobytes), M (megabytes), and G (gigabytes). Example: ‘2G’ for 2 gigabytes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>datafusion.runtime.list_files_cache_ttl</p></td>
+<td><p>NULL</p></td>
+<td><p>TTL (time-to-live) of the entries in the list file cache. Supports units m (minutes), and s (seconds). Example: ‘2m’ for 2 minutes.</p></td>
+</tr>
 <tr class="row-even"><td><p>datafusion.runtime.max_temp_directory_size</p></td>
 <td><p>100G</p></td>
 <td><p>Maximum temporary file directory size. Supports suffixes K (kilobytes), M (megabytes), and G (gigabytes). Example: ‘2G’ for 2 gigabytes.</p></td>

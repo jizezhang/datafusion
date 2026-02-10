@@ -31,7 +31,7 @@
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=0b9a6302" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d08b24aa" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -40,12 +40,13 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'library-user-guide/table-constraints';</script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Extending DataFusion’s operators: custom LogicalPlan and Execution Plans" href="extending-operators.html" />
+    <link rel="next" title="Extending Operators" href="extending-operators.html" />
     <link rel="prev" title="Custom Table Provider" href="custom-table-providers.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -248,6 +249,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../user-guide/expressions.html">Expression API</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user-guide/sql/index.html">SQL Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../user-guide/sql/data_types.html">Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user-guide/sql/struct_coercion.html">Struct Type Coercion and Field Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user-guide/sql/select.html">SELECT syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user-guide/sql/subqueries.html">Subqueries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user-guide/sql/ddl.html">DDL</a></li>
@@ -276,7 +278,18 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library User Guide</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrade Guides</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="upgrading/index.html">Upgrade Guides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/53.0.0.html">DataFusion 53.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/52.0.0.html">DataFusion 52.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/51.0.0.html">DataFusion 51.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/50.0.0.html">DataFusion 50.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/49.0.0.html">DataFusion 49.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/48.0.1.html">DataFusion 48.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/48.0.0.html">DataFusion 48.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/47.0.0.html">DataFusion 47.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrading/46.0.0.html">DataFusion 46.0.0</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="extensions.html">Extensions List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="using-the-sql-api.html">Using the SQL API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extending-sql.html">Extending SQL Syntax</a></li>
@@ -292,17 +305,18 @@
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="custom-table-providers.html">Custom Table Provider</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Table Constraint Enforcement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extending-operators.html">Extending DataFusion’s operators: custom LogicalPlan and Execution Plans</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extending-operators.html">Extending Operators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="profiling.html">Profiling Cookbook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="query-optimizer.html">DataFusion Query Optimizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query-optimizer.html">Query Optimizer</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributor Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/index.html">Introduction</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="../contributor-guide/communication.html">Communication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor-guide/communication.html">Community Communication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/development_environment.html">Development Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor-guide/architecture/dependency-graph.html">Workspace Dependency Graph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/api-health.html">API health policy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributor-guide/howtos.html">HOWTOs</a></li>
@@ -405,14 +419,14 @@
 <section id="table-constraint-enforcement">
 <h1>Table Constraint Enforcement<a class="headerlink" href="#table-constraint-enforcement" title="Link to this heading">#</a></h1>
 <p>Table providers can describe table constraints using the
-<a class="reference external" href="https://docs.rs/datafusion/latest/datafusion/sql/planner/enum.TableConstraint.html"><code class="docutils literal notranslate"><span class="pre">TableConstraint</span></code></a> and <a class="reference external" href="https://docs.rs/datafusion/latest/datafusion/common/functional_dependencies/struct.Constraints.html"><code class="docutils literal notranslate"><span class="pre">Constraints</span></code></a> APIs. These constraints include
+<a class="reference external" href="https://docs.rs/datafusion/latest/datafusion/logical_expr/sqlparser/ast/enum.TableConstraint.html"><code class="docutils literal notranslate"><span class="pre">TableConstraint</span></code></a> and <a class="reference external" href="https://docs.rs/datafusion/latest/datafusion/common/struct.Constraints.html"><code class="docutils literal notranslate"><span class="pre">Constraints</span></code></a> APIs. These constraints include
 primary keys, unique keys, foreign keys and check constraints.</p>
 <p>DataFusion does <strong>not</strong> currently enforce these constraints at runtime.
 They are provided for informational purposes and can be used by custom
 <code class="docutils literal notranslate"><span class="pre">TableProvider</span></code> implementations or other parts of the system.</p>
 <ul class="simple">
 <li><p><strong>Nullability</strong>: The only property enforced by DataFusion is the
-nullability of each <a class="reference external" href="https://docs.rs/arrow/latest/arrow/datatype/struct.Field.html"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a> in a schema. Returning data with null values
+nullability of each <a class="reference external" href="https://docs.rs/arrow/latest/arrow/datatypes/struct.Field.html"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a> in a schema. Returning data with null values
 for Columns marked as not nullable will result in runtime errors during execution. DataFusion
 does not check or enforce nullability when data is ingested.</p></li>
 <li><p><strong>Primary and unique keys</strong>: DataFusion does not verify that the data
@@ -447,7 +461,7 @@ but are not validated or used during query planning.</p></li>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Extending DataFusion’s operators: custom LogicalPlan and Execution Plans</p>
+        <p class="prev-next-title">Extending Operators</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
