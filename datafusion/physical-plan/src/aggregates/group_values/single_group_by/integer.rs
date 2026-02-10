@@ -32,6 +32,8 @@ use datafusion_common::{ColumnStatistics, ScalarValue, internal_err};
 use datafusion_expr::EmitTo;
 use num_traits::AsPrimitive;
 
+use crate::ExecutionPlan;
+use crate::aggregates::AggregateExec;
 use crate::aggregates::group_values::GroupValues;
 
 pub struct GroupValuesInteger<T: ArrowNumericType> {
@@ -224,16 +226,19 @@ macro_rules! make_supported_group_values {
 
 pub fn try_use_direct_indexing(
     schema: &SchemaRef,
-    stats: &[ColumnStatistics],
+    agg: &AggregateExec,
+    partition: Option<usize>,
     range_threshold: usize,
 ) -> datafusion_common::Result<Option<Box<dyn GroupValues>>> {
     if schema.fields().len() == 1 {
         let data_type = schema.fields[0].data_type();
-        if is_supported_type(data_type)
-            && let Some(min) = stats[0].min_value.get_value()
-            && let Some(max) = stats[0].max_value.get_value()
-        {
-            make_supported_group_values!(data_type, min, max, range_threshold)
+        if is_supported_type(data_type) {
+            let stats = agg.partition_statistics(partition)?.column_statistics;
+            if let Some(min) = stats[0].min_value.get_value()
+                && let Some(max) = stats[0].max_value.get_value()
+            {
+                make_supported_group_values!(data_type, min, max, range_threshold)
+            }
         }
     }
     Ok(None)

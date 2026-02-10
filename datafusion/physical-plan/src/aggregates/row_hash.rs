@@ -587,7 +587,6 @@ impl GroupedHashAggregateStream {
             _ => OutOfMemoryMode::ReportError,
         };
 
-        let column_stats = agg.partition_statistics(Some(partition))?.column_statistics;
         let direct_indexing_threshold = context
             .session_config()
             .options()
@@ -595,7 +594,8 @@ impl GroupedHashAggregateStream {
             .grouped_hash_aggregate_direct_indexing_threshold;
         let group_values = if let Ok(Some(group_value)) = try_use_direct_indexing(
             &group_schema,
-            &column_stats,
+            agg,
+            Some(partition),
             direct_indexing_threshold,
         ) {
             debug!("using direct indexing");
