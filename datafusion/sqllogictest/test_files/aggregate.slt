@@ -8810,16 +8810,16 @@ CREATE TABLE direct_index_types(
 
 # Test Int8 with nulls
 query IR
-SELECT i8, SUM(val) FROM direct_index_types GROUP BY i8
+SELECT i8, SUM(val) FROM direct_index_types GROUP BY i8 ORDER BY i8
 ----
-NULL 40
 -1 50
 1 40
 2 20
+NULL 40
 
 # Test Int16 with nulls
 query II rowsort
-SELECT i16, COUNT(*) FROM direct_index_types GROUP BY i16
+SELECT i16, COUNT(*) FROM direct_index_types GROUP BY i16 ORDER BY i16
 ----
 -10 1
 10 2
@@ -8828,7 +8828,7 @@ NULL 1
 
 # Test Int32 with nulls
 query IR rowsort
-SELECT i32, AVG(val) FROM direct_index_types GROUP BY i32
+SELECT i32, AVG(val) FROM direct_index_types GROUP BY i32 ORDER BY i32
 ----
 -100 50
 100 20
@@ -8837,7 +8837,7 @@ NULL 40
 
 # Test Int64 with nulls
 query IR rowsort
-SELECT i64, MAX(val) FROM direct_index_types GROUP BY i64
+SELECT i64, MAX(val) FROM direct_index_types GROUP BY i64 ORDER BY i64
 ----
 -1000 50
 1000 30
@@ -8846,7 +8846,7 @@ NULL 40
 
 # Test UInt8 with nulls
 query IR rowsort
-SELECT u8, MIN(val) FROM direct_index_types GROUP BY u8
+SELECT u8, MIN(val) FROM direct_index_types GROUP BY u8 ORDER BY u8
 ----
 5 10
 6 20
@@ -8855,7 +8855,7 @@ NULL 40
 
 # Test UInt16 with nulls
 query IR rowsort
-SELECT u16, SUM(val) FROM direct_index_types GROUP BY u16
+SELECT u16, SUM(val) FROM direct_index_types GROUP BY u16 ORDER BY u16
 ----
 50 40
 60 20
@@ -8864,7 +8864,7 @@ NULL 40
 
 # Test UInt32 with nulls
 query II rowsort
-SELECT u32, COUNT(*) FROM direct_index_types GROUP BY u32
+SELECT u32, COUNT(*) FROM direct_index_types GROUP BY u32 ORDER BY u32
 ----
 500 2
 600 1
@@ -8873,7 +8873,7 @@ NULL 1
 
 # Test UInt64 with nulls
 query IR rowsort
-SELECT u64, AVG(val) FROM direct_index_types GROUP BY u64
+SELECT u64, AVG(val) FROM direct_index_types GROUP BY u64 ORDER BY u64
 ----
 5000 20
 6000 20
