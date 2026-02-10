@@ -488,6 +488,17 @@ config_namespace! {
         /// Support for build_side.num_rows() >= u32::MAX will be added in the future.
         pub perfect_hash_join_min_key_density: f64, default = 0.15
 
+        /// Maximum range size for which direct indexing will be used
+        /// in grouped hash aggregations on a single integer column.
+        ///
+        /// When performing a `GROUP BY` on a single integer column with a small, dense range of values, 
+        /// DataFusion can use direct array indexing instead of hash-based grouping for better performance. 
+        /// This optimization applies when column statistics (min/max) are available.
+        ///
+        /// Setting this too high may cause excessive memory allocation for sparse data.
+        /// Setting this too low may miss optimization opportunities on dense data.
+        pub grouped_hash_aggregate_direct_indexing_threshold: usize, default = 1024
+
         /// When set to true, record batches will be examined between each operator and
         /// small batches will be coalesced into larger batches. This is helpful when there
         /// are highly selective filters or joins that could produce tiny output batches. The

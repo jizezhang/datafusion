@@ -8784,3 +8784,102 @@ DROP TABLE stream_test;
 # Restore default target partitions
 statement ok
 set datafusion.execution.target_partitions = 4;
+
+#######
+# Direct indexing optimization for grouped hash aggregates
+#######
+
+# Test all supported integer types with nulls
+statement ok
+CREATE TABLE direct_index_types(
+    i8 TINYINT,
+    i16 SMALLINT,
+    i32 INT,
+    i64 BIGINT,
+    u8 TINYINT UNSIGNED,
+    u16 SMALLINT UNSIGNED,
+    u32 INT UNSIGNED,
+    u64 BIGINT UNSIGNED,
+    val DOUBLE
+) AS VALUES
+    (1, 10, 100, 1000, 5, 50, 500, 5000, 10.0),
+    (2, 20, 200, 2000, 6, 60, 600, 6000, 20.0),
+    (1, 10, 100, 1000, 5, 50, 500, 5000, 30.0),
+    (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 40.0),
+    (-1, -10, -100, -1000, 7, 70, 700, 7000, 50.0)
+
+# Test Int8 with nulls
+query IR
+SELECT i8, SUM(val) FROM direct_index_types GROUP BY i8
+----
+NULL 40
+-1 50
+1 40
+2 20
+
+# Test Int16 with nulls
+query II rowsort
+SELECT i16, COUNT(*) FROM direct_index_types GROUP BY i16
+----
+-10 1
+10 2
+20 1
+NULL 1
+
+# Test Int32 with nulls
+query IR rowsort
+SELECT i32, AVG(val) FROM direct_index_types GROUP BY i32
+----
+-100 50
+100 20
+200 20
+NULL 40
+
+# Test Int64 with nulls
+query IR rowsort
+SELECT i64, MAX(val) FROM direct_index_types GROUP BY i64
+----
+-1000 50
+1000 30
+2000 20
+NULL 40
+
+# Test UInt8 with nulls
+query IR rowsort
+SELECT u8, MIN(val) FROM direct_index_types GROUP BY u8
+----
+5 10
+6 20
+7 50
+NULL 40
+
+# Test UInt16 with nulls
+query IR rowsort
+SELECT u16, SUM(val) FROM direct_index_types GROUP BY u16
+----
+50 40
+60 20
+70 50
+NULL 40
+
+# Test UInt32 with nulls
+query II rowsort
+SELECT u32, COUNT(*) FROM direct_index_types GROUP BY u32
+----
+500 2
+600 1
+700 1
+NULL 1
+
+# Test UInt64 with nulls
+query IR rowsort
+SELECT u64, AVG(val) FROM direct_index_types GROUP BY u64
+----
+5000 20
+6000 20
+7000 50
+NULL 40
+
+# Cleanup
+statement ok
+DROP TABLE direct_index_types
