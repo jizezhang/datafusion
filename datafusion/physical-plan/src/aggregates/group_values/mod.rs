@@ -31,12 +31,13 @@ use datafusion_expr::EmitTo;
 pub mod multi_group_by;
 
 mod row;
-pub mod single_group_by;
+mod single_group_by;
 use datafusion_physical_expr::binary_map::OutputType;
 use multi_group_by::GroupValuesColumn;
 use row::GroupValuesRows;
 
 pub(crate) use single_group_by::primitive::HashValue;
+pub(crate) use single_group_by::integer::try_use_direct_indexing;
 
 use crate::aggregates::{
     group_values::single_group_by::{

@@ -494,9 +494,6 @@ config_namespace! {
         /// When performing a `GROUP BY` on a single integer column with a small, dense range of values,
         /// DataFusion can use direct array indexing instead of hash-based grouping for better performance.
         /// This optimization applies when column statistics (min/max) are available.
-        ///
-        /// Setting this too high may cause excessive memory allocation for sparse data.
-        /// Setting this too low may miss optimization opportunities on dense data.
         pub grouped_hash_aggregate_direct_indexing_threshold: usize, default = 1024
 
         /// When set to true, record batches will be examined between each operator and

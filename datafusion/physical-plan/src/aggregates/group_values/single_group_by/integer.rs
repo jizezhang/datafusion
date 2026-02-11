@@ -48,6 +48,7 @@ where
     T::Native: AsPrimitive<u64>,
 {
     pub fn new(data_type: DataType, offset: u64, range: usize) -> Self {
+        // + 2 accounts for closed interval [offset, offset + range] and null
         let mut builder = BooleanBufferBuilder::new(range + 2);
         builder.append_n(range + 2, false);
         Self {
@@ -113,6 +114,7 @@ where
             EmitTo::First(n) => std::cmp::min(n, self.values.len()),
         };
 
+        // Include null mask only when null bit is set and in first n groups
         let null_mask = if self.presence.get_bit(self.map.len() - 1)
             && let Some(null_idx) = self.map.last()
             && *null_idx < n
@@ -128,10 +130,12 @@ where
         let mut split = self.values.split_off(n);
         std::mem::swap(&mut self.values, &mut split);
 
+        // split contains groups to be emitted, resetting presence bit
         for key in &split {
             let idx: usize = (key.as_() - self.offset) as usize;
             self.presence.set_bit(idx, false);
         }
+        // values contains groups remained, shifting group id
         for key in &self.values {
             let idx: usize = (key.as_() - self.offset) as usize;
             self.map[idx] -= n;
@@ -219,7 +223,7 @@ pub fn try_use_direct_indexing(
                 && let Some(max) = stats[0].max_value.get_value()
                 && let Some(min_val) = scalar_to_u64(min)
                 && let Some(max_val) = scalar_to_u64(max)
-                && max_val.wrapping_sub(min_val) <= range_threshold as u64 - 2
+                && max_val - min_val <= range_threshold as u64 - 2
             {
                 let range = (max_val - min_val) as usize;
                 make_supported_group_values!(data_type, min_val, range)

@@ -23,7 +23,7 @@ use std::vec;
 
 use super::AggregateExec;
 use super::order::GroupOrdering;
-use crate::aggregates::group_values::single_group_by::integer::try_use_direct_indexing;
+use crate::aggregates::group_values::try_use_direct_indexing;
 use crate::aggregates::group_values::{GroupByMetrics, GroupValues, new_group_values};
 use crate::aggregates::order::GroupOrderingFull;
 use crate::aggregates::{
