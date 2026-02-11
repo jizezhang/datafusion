@@ -18,12 +18,11 @@
 use std::sync::Arc;
 
 use arrow::array::{
-    ArrowNativeTypeOp, ArrowNumericType, AsArray, BooleanBufferBuilder,
-    NullBufferBuilder, PrimitiveArray,
+    ArrowNumericType, AsArray, BooleanBufferBuilder, NullBufferBuilder, PrimitiveArray,
 };
 use arrow::datatypes::{
-    ArrowNativeType, Int8Type, Int16Type, Int32Type, Int64Type, UInt8Type, UInt16Type,
-    UInt32Type, UInt64Type,
+    Int8Type, Int16Type, Int32Type, Int64Type, UInt8Type, UInt16Type, UInt32Type,
+    UInt64Type,
 };
 
 use arrow_schema::{DataType, SchemaRef};
