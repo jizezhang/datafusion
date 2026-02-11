@@ -22,13 +22,13 @@ use arrow::array::{
     NullBufferBuilder, PrimitiveArray,
 };
 use arrow::datatypes::{
-    Int8Type, Int16Type, Int32Type, Int64Type, UInt8Type, UInt16Type, UInt32Type,
-    UInt64Type,
+    ArrowNativeType, Int8Type, Int16Type, Int32Type, Int64Type, UInt8Type, UInt16Type,
+    UInt32Type, UInt64Type,
 };
 
 use arrow_schema::{DataType, SchemaRef};
+use datafusion_common::ScalarValue;
 use datafusion_common::utils::proxy::VecAllocExt;
-use datafusion_common::{ScalarValue, internal_err};
 use datafusion_expr::EmitTo;
 use num_traits::AsPrimitive;
 
@@ -38,7 +38,7 @@ use crate::aggregates::group_values::GroupValues;
 
 pub struct GroupValuesInteger<T: ArrowNumericType> {
     data_type: DataType,
-    offset: T::Native,
+    offset: u64,
     map: Vec<usize>,
     presence: BooleanBufferBuilder,
     values: Vec<T::Native>,
@@ -48,35 +48,22 @@ impl<T: ArrowNumericType> GroupValuesInteger<T>
 where
     T::Native: AsPrimitive<u64>,
 {
-    pub fn try_new(
-        data_type: DataType,
-        min: T::Native,
-        max: T::Native,
-        range_threshold: usize,
-    ) -> datafusion_common::Result<Self> {
-        let diff: u64 = max.as_().wrapping_sub(min.as_());
-        // diff + 2 covers closed interval [min, max] and null
-        if diff > range_threshold as u64 - 2 {
-            return internal_err!(
-                "GroupValuesInteger key range is too large to be allocated."
-            );
-        }
-        let range: usize = diff as usize + 2;
-        let mut builder = BooleanBufferBuilder::new(range);
-        builder.append_n(range, false);
-        Ok(Self {
+    pub fn new(data_type: DataType, offset: u64, range: usize) -> Self {
+        let mut builder = BooleanBufferBuilder::new(range + 2);
+        builder.append_n(range + 2, false);
+        Self {
             data_type,
-            offset: min,
+            offset,
             map: vec![0; range],
             presence: builder,
             values: Vec::with_capacity(128),
-        })
+        }
     }
 }
 
 impl<T: ArrowNumericType> GroupValues for GroupValuesInteger<T>
 where
-    T::Native: AsPrimitive<usize>,
+    T::Native: AsPrimitive<u64>,
 {
     fn intern(
         &mut self,
@@ -89,7 +76,7 @@ where
         for v in cols[0].as_primitive::<T>() {
             let group_id = match v {
                 Some(key) => {
-                    let idx: usize = key.sub_checked(self.offset)?.as_();
+                    let idx: usize = (key.as_() - self.offset) as usize;
                     if self.presence.get_bit(idx) {
                         self.map[idx]
                     } else {
@@ -143,11 +130,11 @@ where
         std::mem::swap(&mut self.values, &mut split);
 
         for key in &split {
-            let idx: usize = key.sub_checked(self.offset)?.as_();
+            let idx: usize = (key.as_() - self.offset) as usize;
             self.presence.set_bit(idx, false);
         }
         for key in &self.values {
-            let idx: usize = key.sub_checked(self.offset)?.as_();
+            let idx: usize = (key.as_() - self.offset) as usize;
             self.map[idx] -= n;
         }
 
@@ -178,46 +165,41 @@ where
 
 // Helper macro to reduce repetition
 macro_rules! make_group_values {
-    ($d:ident, $min:ident, $max:ident, $type_name:ident, $arrow_type:ty, $native:ty, $range_threshold:ident) => {
-        if let ScalarValue::$type_name(Some(v)) = $min
-            && let ScalarValue::$type_name(Some(u)) = $max
-        {
-            return Ok(Some(Box::new(GroupValuesInteger::<$arrow_type>::try_new(
-                $d.clone(),
-                *v as $native,
-                *u as $native,
-                $range_threshold,
-            )?)));
-        }
+    ($d:ident, $min:ident, $range:ident, $arrow_type:ty) => {
+        return Ok(Some(Box::new(GroupValuesInteger::<$arrow_type>::new(
+            $d.clone(),
+            $min,
+            $range,
+        ))));
     };
 }
 
 macro_rules! make_supported_group_values {
-    ($d:ident, $min:ident, $max:ident, $t:ident) => {
+    ($d:ident, $min:ident, $r:ident) => {
         match $d {
             arrow::datatypes::DataType::Int8 => {
-                make_group_values!($d, $min, $max, Int8, Int8Type, i8, $t);
+                make_group_values!($d, $min, $r, Int8Type);
             }
             arrow::datatypes::DataType::Int16 => {
-                make_group_values!($d, $min, $max, Int16, Int16Type, i16, $t);
+                make_group_values!($d, $min, $r, Int16Type);
             }
             arrow::datatypes::DataType::Int32 => {
-                make_group_values!($d, $min, $max, Int32, Int32Type, i32, $t);
+                make_group_values!($d, $min, $r, Int32Type);
             }
             arrow::datatypes::DataType::Int64 => {
-                make_group_values!($d, $min, $max, Int64, Int64Type, i64, $t);
+                make_group_values!($d, $min, $r, Int64Type);
             }
             arrow::datatypes::DataType::UInt8 => {
-                make_group_values!($d, $min, $max, UInt8, UInt8Type, u8, $t);
+                make_group_values!($d, $min, $r, UInt8Type);
             }
             arrow::datatypes::DataType::UInt16 => {
-                make_group_values!($d, $min, $max, UInt16, UInt16Type, u16, $t);
+                make_group_values!($d, $min, $r, UInt16Type);
             }
             arrow::datatypes::DataType::UInt32 => {
-                make_group_values!($d, $min, $max, UInt32, UInt32Type, u32, $t);
+                make_group_values!($d, $min, $r, UInt32Type);
             }
             arrow::datatypes::DataType::UInt64 => {
-                make_group_values!($d, $min, $max, UInt64, UInt64Type, u64, $t);
+                make_group_values!($d, $min, $r, UInt64Type);
             }
             _ => return Ok(None),
         }
@@ -236,8 +218,12 @@ pub fn try_use_direct_indexing(
             let stats = agg.partition_statistics(partition)?.column_statistics;
             if let Some(min) = stats[0].min_value.get_value()
                 && let Some(max) = stats[0].max_value.get_value()
+                && let Some(min_val) = scalar_to_u64(min)
+                && let Some(max_val) = scalar_to_u64(max)
+                && max_val.wrapping_sub(min_val) <= range_threshold as u64 - 2
             {
-                make_supported_group_values!(data_type, min, max, range_threshold)
+                let range = (max_val - min_val) as usize;
+                make_supported_group_values!(data_type, min_val, range)
             }
         }
     }
@@ -256,4 +242,18 @@ fn is_supported_type(data_type: &DataType) -> bool {
             | DataType::UInt32
             | DataType::UInt64
     )
+}
+
+fn scalar_to_u64(v: &ScalarValue) -> Option<u64> {
+    match v {
+        ScalarValue::Int8(Some(v)) => Some(*v as u64),
+        ScalarValue::Int16(Some(v)) => Some(*v as u64),
+        ScalarValue::Int32(Some(v)) => Some(*v as u64),
+        ScalarValue::Int64(Some(v)) => Some(*v as u64),
+        ScalarValue::UInt8(Some(v)) => Some(*v as u64),
+        ScalarValue::UInt16(Some(v)) => Some(*v as u64),
+        ScalarValue::UInt32(Some(v)) => Some(*v as u64),
+        ScalarValue::UInt64(Some(v)) => Some(*v),
+        _ => None,
+    }
 }
