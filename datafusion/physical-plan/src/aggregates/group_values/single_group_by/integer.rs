@@ -54,7 +54,7 @@ where
         Self {
             data_type,
             offset,
-            map: vec![0; range],
+            map: vec![0; range + 2],
             presence: builder,
             values: Vec::with_capacity(128),
         }
