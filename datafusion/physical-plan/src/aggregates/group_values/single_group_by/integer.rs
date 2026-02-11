@@ -28,7 +28,7 @@ use arrow::datatypes::{
 
 use arrow_schema::{DataType, SchemaRef};
 use datafusion_common::utils::proxy::VecAllocExt;
-use datafusion_common::{ColumnStatistics, ScalarValue, internal_err};
+use datafusion_common::{ScalarValue, internal_err};
 use datafusion_expr::EmitTo;
 use num_traits::AsPrimitive;
 
