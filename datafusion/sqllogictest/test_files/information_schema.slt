@@ -358,7 +358,7 @@ datafusion.execution.collect_statistics true Should DataFusion collect statistic
 datafusion.execution.enable_ansi_mode false Whether to enable ANSI SQL mode. The flag is experimental and relevant only for DataFusion Spark built-in functions When `enable_ansi_mode` is set to `true`, the query engine follows ANSI SQL semantics for expressions, casting, and error handling. This means: - **Strict type coercion rules:** implicit casts between incompatible types are disallowed. - **Standard SQL arithmetic behavior:** operations such as division by zero,   numeric overflow, or invalid casts raise runtime errors rather than returning   `NULL` or adjusted values. - **Consistent ANSI behavior** for string concatenation, comparisons, and `NULL` handling. When `enable_ansi_mode` is `false` (the default), the engine uses a more permissive, non-ANSI mode designed for user convenience and backward compatibility. In this mode: - Implicit casts between types are allowed (e.g., string to integer when possible). - Arithmetic operations are more lenient — for example, `abs()` on the minimum   representable integer value returns the input value instead of raising overflow. - Division by zero or invalid casts may return `NULL` instead of failing. # Default `false` — ANSI SQL mode is disabled by default.
 datafusion.execution.enable_recursive_ctes true Should DataFusion support recursive CTEs
 datafusion.execution.enforce_batch_size_in_joins false Should DataFusion enforce batch size in joins or not. By default, DataFusion will not enforce batch size in joins. Enforcing batch size in joins can reduce memory usage when joining large tables with a highly-selective join filter, but is also slightly slower.
-datafusion.execution.grouped_hash_aggregate_direct_indexing_threshold 1024 Maximum range size for which direct indexing will be used in grouped hash aggregations on a single integer column. When performing a `GROUP BY` on a single integer column with a small, dense range of values, DataFusion can use direct array indexing instead of hash-based grouping for better performance. This optimization applies when column statistics (min/max) are available. Setting this too high may cause excessive memory allocation for sparse data. Setting this too low may miss optimization opportunities on dense data.
+datafusion.execution.grouped_hash_aggregate_direct_indexing_threshold 1024 Maximum range size for which direct indexing will be used in grouped hash aggregations on a single integer column. When performing a `GROUP BY` on a single integer column with a small, dense range of values, DataFusion can use direct array indexing instead of hash-based grouping for better performance. This optimization applies when column statistics (min/max) are available.
 datafusion.execution.keep_partition_by_columns false Should DataFusion keep the columns used for partition_by in the output RecordBatches
 datafusion.execution.listing_table_factory_infer_partitions true Should a `ListingTable` created through the `ListingTableFactory` infer table partitions from Hive compliant directories. Defaults to true (partition columns are inferred and will be represented in the table schema).
 datafusion.execution.listing_table_ignore_subdirectory true Should sub directories be ignored when scanning directories for data files. Defaults to true (ignores subdirectories), consistent with Hive. Note that this setting does not affect reading partitioned tables (e.g. `/table/year=2021/month=01/data.parquet`).
@@ -742,51 +742,45 @@ SHOW CREATE TABLE abc;
 datafusion public abc CREATE EXTERNAL TABLE abc STORED AS CSV LOCATION ../../testing/data/csv/aggregate_test_100.csv
 
 # show_external_create_table_with_order
-statement ok
+statement error DataFusion error: Error during planning: Column c1 is not in schema
 CREATE EXTERNAL TABLE abc_ordered
 STORED AS CSV
 WITH ORDER (c1)
 LOCATION '../../testing/data/csv/aggregate_test_100.csv'
 OPTIONS ('format.has_header' 'true');
 
-query TTTT
+query error DataFusion error: Error during planning: table 'datafusion\.public\.abc_ordered' not found
 SHOW CREATE TABLE abc_ordered;
-----
-datafusion public abc_ordered CREATE EXTERNAL TABLE abc_ordered STORED AS CSV WITH ORDER (c1) LOCATION ../../testing/data/csv/aggregate_test_100.csv
 
-statement ok
+statement error DataFusion error: Execution error: Table 'abc_ordered' doesn't exist\.
 DROP TABLE abc_ordered;
 
 # show_external_create_table_with_multiple_order_columns
-statement ok
+statement error DataFusion error: Error during planning: Column c1 is not in schema
 CREATE EXTERNAL TABLE abc_multi_order
 STORED AS CSV
 WITH ORDER (c1, c2 DESC)
 LOCATION '../../testing/data/csv/aggregate_test_100.csv'
 OPTIONS ('format.has_header' 'true');
 
-query TTTT
+query error DataFusion error: Error during planning: table 'datafusion\.public\.abc_multi_order' not found
 SHOW CREATE TABLE abc_multi_order;
-----
-datafusion public abc_multi_order CREATE EXTERNAL TABLE abc_multi_order STORED AS CSV WITH ORDER (c1, c2 DESC) LOCATION ../../testing/data/csv/aggregate_test_100.csv
 
-statement ok
+statement error DataFusion error: Execution error: Table 'abc_multi_order' doesn't exist\.
 DROP TABLE abc_multi_order;
 
 # show_external_create_table_with_order_nulls
-statement ok
+statement error DataFusion error: Error during planning: Column c2 is not in schema
 CREATE EXTERNAL TABLE abc_order_nulls
 STORED AS CSV
 WITH ORDER (c1 NULLS LAST, c2 DESC NULLS FIRST)
 LOCATION '../../testing/data/csv/aggregate_test_100.csv'
 OPTIONS ('format.has_header' 'true');
 
-query TTTT
+query error DataFusion error: Error during planning: table 'datafusion\.public\.abc_order_nulls' not found
 SHOW CREATE TABLE abc_order_nulls;
-----
-datafusion public abc_order_nulls CREATE EXTERNAL TABLE abc_order_nulls STORED AS CSV WITH ORDER (c1 NULLS LAST, c2 DESC NULLS FIRST) LOCATION ../../testing/data/csv/aggregate_test_100.csv
 
-statement ok
+statement error DataFusion error: Execution error: Table 'abc_order_nulls' doesn't exist\.
 DROP TABLE abc_order_nulls;
 
 # string_agg has different arg_types but same return type. Test avoiding duplicate entries for the same function.

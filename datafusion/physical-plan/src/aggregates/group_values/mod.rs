@@ -36,8 +36,8 @@ use datafusion_physical_expr::binary_map::OutputType;
 use multi_group_by::GroupValuesColumn;
 use row::GroupValuesRows;
 
-pub(crate) use single_group_by::primitive::HashValue;
 pub(crate) use single_group_by::integer::try_use_direct_indexing;
+pub(crate) use single_group_by::primitive::HashValue;
 
 use crate::aggregates::{
     group_values::single_group_by::{

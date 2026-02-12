@@ -223,7 +223,7 @@ pub fn try_use_direct_indexing(
                 && let Some(max) = stats[0].max_value.get_value()
                 && let Some(min_val) = scalar_to_u64(min)
                 && let Some(max_val) = scalar_to_u64(max)
-                && max_val - min_val <= range_threshold as u64 - 2
+                && max_val.wrapping_sub(min_val) <= range_threshold as u64 - 2
             {
                 let range = (max_val - min_val) as usize;
                 make_supported_group_values!(data_type, min_val, range)
